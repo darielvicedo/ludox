@@ -1,3 +1,48 @@
+@import "variables";
+
+@import "~bootstrap";
+
+@import url('https://fonts.googleapis.com/css2?family=Suez+One&display=swap');
+
 body {
-    background-color: lightgray;
+  background-color: #f3f3f3;
+}
+
+.fs-suez {
+  font-family: 'Suez One', serif;
+}
+
+.breadcrumb {
+  padding: 15px;
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: 1px;
+  border-radius: 8px;
+
+  .breadcrumb-item + .breadcrumb-item {
+    &::before {
+      content: "//";
+      color: $color-gray;
+    }
+  }
+
+  .active {
+    color: $color-gray;
+  }
+
+  img {
+    vertical-align: middle;
+    opacity: 0.5;
+    cursor: pointer;
+  }
+}
+
+#mainSidebar {
+  .nav-item {
+    background-image: linear-gradient(358.4deg, rgba(230,230,230,1) -2.1%, rgba(250, 250, 250, 1) 90%);
+
+    .nav-link {
+      letter-spacing: 0.8px;
+    }
+  }
 }
