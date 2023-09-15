@@ -1,0 +1,71 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-2">
+            <ul class="nav flex-column" id="mainSidebar">
+                <li class="text-center mb-2 badge bg-secondary mx-auto">
+                    <small>ludoteca</small>
+                </li>
+                <li class="nav-item mb-2 border rounded">
+                    <a
+                            class="nav-link fw-bold text-danger"
+                            aria-current="page"
+                            href="#"
+                    >
+                        Juegos
+                    </a>
+                </li>
+                <li class="text-center mb-2 mt-3 badge bg-secondary mx-auto">
+                    <small>administración</small>
+                </li>
+{#                {% if is_granted('ROLE_ADMIN') %}#}
+                    <li class="nav-item mb-2 border rounded">
+                        <a
+                                class="nav-link fw-bold text-danger"
+                                aria-current="page"
+                                href="#"
+                        >
+                            Ubicaciones
+                        </a>
+                    </li>
+{#                {% endif %}#}
+                <li class="text-center mb-2 mt-3 badge bg-secondary mx-auto">
+                    <small>finanzas</small>
+                </li>
+{#                {% if is_granted('ROLE_ACCOUNT') %}#}
+                    <li class="nav-item mb-2 border rounded">
+                        <a
+                                class="nav-link fw-bold text-danger"
+                                aria-current="page"
+                                href="#"
+                        >
+                            Cuentas
+                        </a>
+                    </li>
+{#                {% endif %}#}
+{#                {% if is_granted('ROLE_ACCOUNT') %}#}
+                    <li class="nav-item mb-2 border rounded">
+                        <a
+                                class="nav-link fw-bold text-danger"
+                                aria-current="page"
+                                href="#"
+                        >
+                            Activos Fijos
+                        </a>
+                    </li>
+{#                {% endif %}#}
+            </ul>
+        </div>
+
+        <div class="col-12 col-md-7">
+            center
+        </div>
+
+        <div class="col-12 col-md-3">
+            right
+        </div>
+    </div>
+{% endblock %}
