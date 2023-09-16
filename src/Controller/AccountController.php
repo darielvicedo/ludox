@@ -51,6 +51,19 @@ class AccountController extends AbstractController
     #[IsGranted('ROLE_ACCOUNT')]
     public function show(Request $request, Account $account): Response
     {
+        $form = $this->createForm(AccountType::class, $account);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->flush();
+
+            $this->addFlash('success', 'La cuenta ha sido modificada con éxito!');
+
+            return $this->redirectToRoute('app_account_show', [
+                'id' => $account->getId(),
+            ], Response::HTTP_SEE_OTHER);
+        }
+
         $entry = new AccountEntry();
         $entry->setAccount($account);
         $entryForm = $this->createForm(AccountEntryType::class, $entry);
@@ -71,6 +84,7 @@ class AccountController extends AbstractController
             'account' => $account,
             'entry' => $entry,
             'entryForm' => $entryForm->createView(),
+            'form' => $form->createView(),
         ]);
     }
 
