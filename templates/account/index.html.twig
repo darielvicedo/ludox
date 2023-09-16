@@ -48,11 +48,11 @@
                         <div class="card">
                             <div class="card-header p-1">
                                 {% if account.isDebit %}
-                                    <span class="badge bg-info">{{ account.code }}</span>
+                                    <span class="badge bg-info ls-1">{{ account.code }}</span>
                                 {% else %}
-                                    <span class="badge bg-warning">{{ account.code }}</span>
-                                {% endif %}
-                                {{ account.name }}
+                                    <span class="badge bg-warning ls-1">{{ account.code }}</span>
+                                {% endif %}<br>
+                                <span class="float-end">{{ account.name }}</span>
                             </div>
                             <div class="card-body p-1">
                                 <div class="text-center font-monospace fs-2">
