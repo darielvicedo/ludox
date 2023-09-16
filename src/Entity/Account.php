@@ -29,7 +29,7 @@ class Account
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?int $type = null;
+    private ?int $type;
 
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: AccountEntry::class, orphanRemoval: true)]
     private Collection $entries;
