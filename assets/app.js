@@ -10,3 +10,9 @@ import './bootstrap.js';
 import './styles/app.scss';
 
 import 'bootstrap';
+
+// libs
+import Swal from 'sweetalert2';
+
+// globals
+global.Swal = Swal;
