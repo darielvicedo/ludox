@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container d-flex vh-100 flex-column">
+        <div class="row d-flex vh-100 justify-content-center align-items-center">
+            <div class="col-12 col-md-4">
+                <div class="card shadow-stripe">
+                    <div class="card-header">Acceso</div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="row">
+                                <div class="col-12">
+                                    {% if error %}
+                                        <div class="alert alert-danger p-1">
+                                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if app.user %}
+                                        <div class="mb-3 text-center">
+                                            <div class="alert alert-info p-1">
+                                                You are logged in as {{ app.user.username }}
+                                            </div>
+                                            <a href="{{ path('app_logout') }}" class="btn btn-sm btn-dark">
+                                                Logout
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <label for="inputEmail" class="visually-hidden">Username</label>
+                                    <input
+                                            type="text"
+                                            value="{{ last_username }}"
+                                            name="username"
+                                            id="inputEmail"
+                                            class="form-control"
+                                            placeholder="Nombre de usuario"
+                                            required
+                                            autofocus
+                                    >
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="inputPassword" class="visually-hidden">Password</label>
+                                    <input
+                                            type="password"
+                                            name="password"
+                                            id="inputPassword"
+                                            class="form-control"
+                                            placeholder="Contraseña"
+                                            required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <input
+                                            type="hidden"
+                                            name="_csrf_token"
+                                            value="{{ csrf_token('authenticate') }}"
+                                    >
+                                    <button class="btn btn-primary" type="submit">
+                                        Entrar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -37,11 +37,11 @@
 
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item me-3">
-                    <a href="#" class="nav-link p-0">name</a>
+                    <a href="#" class="nav-link p-0">{{ app.user.username }}</a>
                 </li>
                 <li class="nav-item">
                     <a
-                            href="#}"
+                            href="{{ path('app_logout') }}"
                             class="btn btn-sm btn-danger"
                             title="logout"
                             data-bs-toggle="tooltip"
