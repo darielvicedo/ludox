@@ -41,7 +41,7 @@ class AccountController extends AbstractController
         }
 
         return $this->render('account/index.html.twig', [
-            'accounts' => $this->em->getRepository(Account::class)->findAll(),
+            'accounts' => $this->em->getRepository(Account::class)->findBy([], ['type' => 'ASC']),
             'account' => $account,
             'form' => $form->createView(),
         ]);
