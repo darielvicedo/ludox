@@ -33,14 +33,14 @@
                     </li>
 {#                {% endif %}#}
                 <li class="nav-header text-center mb-2 mt-3 badge bg-secondary mx-auto">
-                    <small>finanzas</small>
+                    <small>contabilidad e inventario</small>
                 </li>
 {#                {% if is_granted('ROLE_ACCOUNT') %}#}
                     <li class="nav-item mb-2 border rounded">
                         <a
                                 class="nav-link fw-bold text-danger"
                                 aria-current="page"
-                                href="#"
+                                href="{{ path('app_account_index') }}"
                         >
                             Cuentas
                         </a>

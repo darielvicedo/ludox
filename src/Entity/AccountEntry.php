@@ -37,6 +37,7 @@ class AccountEntry
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->annotatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -80,9 +81,9 @@ class AccountEntry
         return $this;
     }
 
-    public function getDebit(): ?int
+    public function getDebit(): int
     {
-        return $this->debit;
+        return $this->debit ?: 0;
     }
 
     public function setDebit(?int $debit): static
@@ -92,9 +93,9 @@ class AccountEntry
         return $this;
     }
 
-    public function getCredit(): ?int
+    public function getCredit(): int
     {
-        return $this->credit;
+        return $this->credit ?: 0;
     }
 
     public function setCredit(?int $credit): static

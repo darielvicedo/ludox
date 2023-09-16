@@ -20,7 +20,7 @@ class Account
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(length: 16, unique: true)]
     private ?string $code = null;
@@ -37,6 +37,9 @@ class Account
     public function __construct()
     {
         $this->entries = new ArrayCollection();
+
+        $this->createdAt = new \DateTimeImmutable();
+        $this->type = AccountTypeEnum::ACCOUNT_DEBIT;
     }
 
     public function getId(): ?int
@@ -101,6 +104,11 @@ class Account
         return $this;
     }
 
+    public function getTypeName(): string
+    {
+        return AccountTypeEnum::getTypeName($this->getType());
+    }
+
     /**
      * @return Collection<int, AccountEntry>
      */
@@ -129,5 +137,52 @@ class Account
         }
 
         return $this;
+    }
+
+    public function isDebit(): bool
+    {
+        return $this->getType() === AccountTypeEnum::ACCOUNT_DEBIT;
+    }
+
+    public function isCredit(): bool
+    {
+        return $this->getType() === AccountTypeEnum::ACCOUNT_CREDIT;
+    }
+
+    public function getDebit(): float
+    {
+        $debit = 0;
+
+        foreach ($this->getEntries() as $entry) {
+            $debit += $entry->getDebit() ?: 0;
+        }
+
+        return $debit;
+    }
+
+    public function getCredit(): float
+    {
+        $credit = 0;
+
+        foreach ($this->getEntries() as $entry) {
+            $credit += $entry->getCredit() ?: 0;
+        }
+
+        return $credit;
+    }
+
+    public function getBalance(): float
+    {
+        $debit = 0;
+        $credit = 0;
+
+        foreach ($this->getEntries() as $entry) {
+            $debit += $entry->getDebit() ?: 0;
+            $credit += $entry->getCredit() ?: 0;
+        }
+
+        $balance = $this->getType() === AccountTypeEnum::ACCOUNT_DEBIT ? $debit - $credit : $credit - $debit;
+
+        return $balance;
     }
 }

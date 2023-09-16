@@ -1,0 +1,87 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Cuentas{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Cuentas</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-3">
+            <div class="card border-success">
+                <div class="card-header bg-success fw-bold text-white-50">{{ 'Nueva Cuenta'|upper }}</div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                    <div class="col-12">
+                        {{ form_label(form.code, 'Código', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.code, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_label(form.type, 'Tipo de cuenta', {'label_attr': {'class': 'form-label'}}) }}
+                        {% for radio in form.type %}
+                            <div class="form-check">
+                                {{ form_widget(radio) }}
+                                {{ form_label(radio) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button class="btn btn-sm btn-success text-white">Crear</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-9">
+            <div class="row">
+                {% for account in accounts %}
+                    <div class="col-12 col-md-3">
+                        <div class="card">
+                            <div class="card-header p-1">
+                                {% if account.isDebit %}
+                                    <span class="badge bg-info">{{ account.code }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning">{{ account.code }}</span>
+                                {% endif %}
+                                {{ account.name }}
+                            </div>
+                            <div class="card-body p-1">
+                                <div class="text-center font-monospace fs-2">
+                                    {% set balance = account.balance %}
+                                    {% if balance > 0 %}
+                                        <a class="text-success"
+                                           href="{{ path('app_account_show', {'id': account.id}) }}">
+                                            {{ balance|money|format_currency('USD') }}
+                                        </a>
+                                    {% elseif balance == 0 %}
+                                        <a class="text-muted" href="{{ path('app_account_show', {'id': account.id}) }}">
+                                            {{ balance|money|format_currency('USD') }}
+                                        </a>
+                                    {% else %}
+                                        <a class="text-danger"
+                                           href="{{ path('app_account_show', {'id': account.id}) }}">
+                                            {{ balance|money|format_currency('USD') }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center text-muted">
+                        no hay cuentas aun, use el formulario de la derecha para añadir
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

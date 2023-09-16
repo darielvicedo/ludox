@@ -1,0 +1,131 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ account.name }}{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item d-flex justify-content-start align-items-center">
+        <a href="{{ path('app_account_index') }}" class="pr-md-3 pl-md-2 pr-2 pl-1">Cuentas</a>
+    </li>
+    <li class="breadcrumb-item active">{{ account.name }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-3"></div>
+
+        <div class="col-12 col-md-9">
+            <div class="card">
+                <div class="card-header">Entradas</div>
+                <div class="card-body p-0">
+                    <table class="table m-0">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Debe</th>
+                            <th>Haber</th>
+                            <th class="text-center"><i class="bi-gear-fill"></i></th>
+                        </tr>
+                        {{ form_start(entryForm) }}
+                        <tr>
+                            <th>
+                                {{ form_widget(entryForm.annotatedAt, {'attr': {'class': 'form-control'}}) }}
+                            </th>
+                            <th>
+                                {{ form_widget(entryForm.concept, {'attr': {'class': 'form-control'}}) }}
+                            </th>
+                            <th>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {{ form_widget(entryForm.debit, {'attr': {'class': 'form-control'}}) }}
+                                    {% if account.isDebit %}
+                                        <i class="bi-file-arrow-up-fill text-success"></i>
+                                    {% else %}
+                                        <i class="bi-file-arrow-down-fill text-danger"></i>
+                                    {% endif %}
+                                </div>
+                            </th>
+                            <th>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {{ form_widget(entryForm.credit, {'attr': {'class': 'form-control'}}) }}
+                                    {% if account.isDebit %}
+                                        <i class="bi-file-arrow-down-fill text-danger"></i>
+                                    {% else %}
+                                        <i class="bi-file-arrow-up-fill text-success"></i>
+                                    {% endif %}
+                                </div>
+                            </th>
+                            <th class="text-center">
+                                <button type="submit" class="btn btn-sm btn-primary">Entrar</button>
+                            </th>
+                        </tr>
+                        {{ form_end(entryForm) }}
+                        </thead>
+                        <tbody>
+                        {% for entry in account.entries %}
+                            <tr>
+                                <td class="text-end">{{ entry.annotatedAt|date('d/m/Y') }}</td>
+                                <td class="fw-bold">{{ entry.concept }}</td>
+                                <td class="text-end font-monospace">
+                                    {% set debit = entry.debit %}
+                                    {% if debit == 0 %}
+                                        <span class="text-muted">{{ debit|money|format_currency('USD') }}</span>
+                                    {% else %}
+                                        {{ debit|money|format_currency('USD') }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-end font-monospace">
+                                    {% set credit = entry.credit %}
+                                    {% if credit == 0 %}
+                                        <span class="text-muted">{{ credit|money|format_currency('USD') }}</span>
+                                    {% else %}
+                                        {{ credit|money|format_currency('USD') }}
+                                    {% endif %}
+                                </td>
+                                <td></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    <small>no hay entradas</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if account.entries %}
+                            <tr>
+                                <td colspan="2" class="text-end fw-bold">Saldo</td>
+                                <td class="text-end font-monospace">
+                                    {% if account.debit > 0 %}
+                                        <span class="text-success">{{ account.debit|money|format_currency('USD') }}</span>
+                                    {% elseif account.debit == 0 %}
+                                        <span class="text-muted">{{ account.debit|money|format_currency('USD') }}</span>
+                                    {% else %}
+                                        <span class="text-danger">{{ account.debit|money|format_currency('USD') }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end font-monospace">
+                                    {% if account.credit > 0 %}
+                                        <span class="text-success">{{ account.credit|money|format_currency('USD') }}</span>
+                                    {% elseif account.credit == 0 %}
+                                        <span class="text-muted">{{ account.credit|money|format_currency('USD') }}</span>
+                                    {% else %}
+                                        <span class="text-danger">{{ account.credit|money|format_currency('USD') }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end font-monospace fw-bold">
+                                    {% if account.balance > 0 %}
+                                        <span class="text-success">{{ account.balance|money|format_currency('USD') }}</span>
+                                    {% elseif account.balance == 0 %}
+                                        <span class="text-muted">{{ account.balance|money|format_currency('USD') }}</span>
+                                    {% else %}
+                                        <span class="text-danger">{{ account.balance|money|format_currency('USD') }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
