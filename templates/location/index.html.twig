@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Ubicaciones{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Ubicaciones</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <div class="card border-success">
+                <div class="card-header bg-success fw-bold text-white-50">{{ 'Nueva Ubicación'|upper }}</div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                    <div class="col-12">
+                        {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_label(form.address, 'Dirección', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_label(form.city, 'Ciudad', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button class="btn btn-sm btn-success text-white">Crear</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8">
+            <div class="row">
+                {% for location in locations %}
+                    <div class="col-12 col-md-4">
+                        <div class="card">
+                            <div class="card-header">{{ location.name }}</div>
+                            <div class="card-body">
+                                <address>
+                                    {{ location.address }}<br>
+                                    {{ location.city }}
+                                </address>
+
+                                <a href="{{ path('app_location_show', {'id': location.id}) }}" class="btn btn-sm btn-primary float-end">
+                                    Ver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center text-muted">
+                        no hay ubicaciones aun, use el formulario de la izquierda para añadir
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

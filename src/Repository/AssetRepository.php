@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Asset;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,57 @@ class AssetRepository extends ServiceEntityRepository
         parent::__construct($registry, Asset::class);
     }
 
-//    /**
-//     * @return Asset[] Returns an array of Asset objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Get assets by filter.
+     *
+     * @param array $filter
+     * @return array
+     */
+    public function getByFilter(array $filter)
+    {
+        $query = $this->createQueryBuilder('a');
 
-//    public function findOneBySomeField($value): ?Asset
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        // limit
+        $results = $filter['filter_results'];
+        if ($results) {
+            $query
+                ->setFirstResult($filter['filter_results'] * ($filter['filter_page'] - 1))
+                ->setMaxResults($filter['filter_results']);
+        }
+
+        // categories
+        $categoryId = (int)$filter['filter_category'];
+        if ($categoryId >= 0) {
+            $query
+                ->setParameter('categoryId', $categoryId)
+                ->andWhere('a.category = :categoryId');
+        }
+
+        // location
+        $locationId = (int)$filter['filter_location'];
+        if ($locationId) {
+            $query
+                ->setParameter('locationId', $locationId)
+                ->join('a.location', 'location')
+                ->andWhere('location.id = :locationId');
+        }
+
+        // name
+        $name = $filter['filter_name'];
+        if ($name) {
+            $query
+                ->setParameter('name', '%' . $name . '%')
+                ->andWhere('a.name LIKE :name');
+        }
+
+        // order
+        $query->orderBy('a.' . $filter['filter_order'], $filter['filter_direction']);
+
+        // paginate
+        $paginator = new Paginator($query);
+        $total = count($paginator);
+        $pages = $results ? ceil($total / $results) : 1;
+
+        return [$query->getQuery()->getResult(), $total, $pages];
+    }
 }

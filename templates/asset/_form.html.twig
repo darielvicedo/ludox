@@ -1,0 +1,37 @@
+{{ form_start(form, {'attr': {'class': 'row g-3', 'data-action': 'asset#new'}}) }}
+<div class="col-12 col-md-7">
+    {{ form_label(form.location, 'Ubicación', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.location, {'attr': {'class': 'form-select'}}) }}
+</div>
+
+<div class="col-12 col-md-5">
+    {{ form_label(form.category, 'Categoría', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.code, 'Código', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.code, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-8">
+    {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.price, 'Precio', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.cost, 'Costo', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.cost, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 text-end">
+    <button type="submit" class="btn btn-sm btn-success text-white">
+        Crear
+    </button>
+</div>
+{{ form_end(form) }}

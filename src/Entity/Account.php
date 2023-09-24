@@ -42,6 +42,11 @@ class Account
         $this->type = AccountTypeEnum::ACCOUNT_DEBIT;
     }
 
+    public function __toString(): string
+    {
+        return $this->getCode() . ' - ' . $this->getName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

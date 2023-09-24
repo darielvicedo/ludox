@@ -1,0 +1,146 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Activos Fijos{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Activos Fijos</li>
+{% endblock %}
+
+{% block content %}
+    <div
+            {{ stimulus_controller('asset', {
+                loadAssetsUrl: path('app_asset_dt'),
+                newAssetFormUrl: path('app_asset_new')
+            }) }}
+    >
+        <div class="row">
+            <div class="col-12 col-md-3">
+                {# New Form #}
+                <div class="card border-success mb-3">
+                    <div class="card-header bg-success fw-bold text-white-50">{{ 'Nuevo Activo'|upper }}</div>
+                    <div class="card-body" {{ stimulus_target('asset', 'newForm') }}>
+                        {{ include('fragments/_spinner.html.twig') }}
+                    </div>
+                </div>
+
+                {# Batch Actions #}
+                <div class="card">
+                    <div class="card-header">ACTIONS</div>
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label" for="action_account_entry">Asiento contable a:</label>
+                                <select class="form-select" id="action_account_entry" name="action_account_entry">
+                                    <option value="">Seleccione...</option>
+                                    {% for account in accounts %}
+                                        <option value="{{ account.id }}">{{ account }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-9">
+                <div class="card shadow-sm">
+                    <div class="card-header">{{ 'activos fijos'|upper }}</div>
+                    {# filter #}
+                    <div class="card-body">
+                        <form class="row g-3" {{ stimulus_target('asset', 'filterForm') }}>
+                            <div class="col-12 col-md-1">
+                                <label class="form-label" for="filter_results">Elementos:</label>
+                                <select
+                                        id="filter_results"
+                                        name="filter_results"
+                                        class="form-select"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                                    <option value="10" selected>10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="0">Todos</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <label class="form-label" for="filter_order">Ordenar por:</label>
+                                <select
+                                        id="filter_order"
+                                        name="filter_order"
+                                        class="form-select"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                                    <option value="code" selected>Código</option>
+                                    <option value="name">Nombre</option>
+                                    <option value="price">Precio</option>
+                                    <option value="cost">Costo</option>
+                                    <option value="lastMovementAt">Último Movimiento</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <label class="form-label" for="filter_direction">Dirección:</label>
+                                <select
+                                        id="filter_direction"
+                                        name="filter_direction"
+                                        class="form-select"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                                    <option value="DESC" selected>DESC</option>
+                                    <option value="ASC">ASC</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <label class="form-label" for="filter_category">Categorías:</label>
+                                <select
+                                        id="filter_category"
+                                        name="filter_category"
+                                        class="form-select"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                                    <option value="-1" selected>Todas</option>
+                                    {% for name, id in categories %}
+                                        <option value="{{ id }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-2">
+                                <label class="form-label" for="filter_location">Ubicación:</label>
+                                <select
+                                        id="filter_location"
+                                        name="filter_location"
+                                        class="form-select"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                                    <option value="0" selected>Todas</option>
+                                    {% for location in locations %}
+                                        <option value="{{ location.id }}">{{ location }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12 col-md-3">
+                                <label class="form-label" for="filter_name">Nombre:</label>
+                                <input
+                                        type="text"
+                                        id="filter_name"
+                                        name="filter_name"
+                                        class="form-control"
+                                        style="text-transform: uppercase;"
+                                        {{ stimulus_action('asset', 'loadTable') }}
+                                >
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body p-0" {{ stimulus_target('asset', 'dt') }}>
+                        {{ include('fragments/_spinner.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

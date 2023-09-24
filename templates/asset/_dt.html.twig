@@ -1,0 +1,159 @@
+<table class="table table-sm table-striped m-0">
+    <thead>
+    <tr class="table-dark">
+        <th class="d-flex justify-content-center align-items-center">
+            <div class="form-check d-flex justify-content-center align-items-center">
+                <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="select_all"
+                        {{ stimulus_action('asset', 'selectAll') }}
+                >
+                <label class="form-check-label visually-hidden" for="select_all">
+                    Select all
+                </label>
+            </div>
+        </th>
+        <th class="text-end">Código</th>
+        <th class="">Nombre</th>
+        <th class="text-end">Precio</th>
+        <th class="text-end">Costo</th>
+        <th class="text-end">Valor</th>
+        <th class="text-center">Categoría</th>
+        <th class="text-center">Ubicación</th>
+        <th class="text-end">Último Movimiento</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assets %}
+        <tr>
+            <th class="d-flex justify-content-center align-items-center">
+                <div class="form-check d-flex justify-content-center align-items-center">
+                    <input
+                            class="form-check-input dt-row-select"
+                            type="checkbox"
+                            id="select_{{ asset.id }}"
+                            data-asset-id="{{ asset.id }}"
+                    >
+                    <label class="form-check-label visually-hidden" for="select_{{ asset.id }}">
+                        Select asset {{ asset.id }}
+                    </label>
+                </div>
+            </th>
+            <th class="text-end">{{ asset.code }}</th>
+            <td>{{ asset.name|upper }}</td>
+            <td class="text-end font-monospace">{{ asset.price|money|format_currency('USD') }}</td>
+            <td class="text-end font-monospace">{{ asset.cost|money|format_currency('USD') }}</td>
+            <td class="text-end font-monospace fw-bold">{{ asset.value|money|format_currency('USD') }}</td>
+            <td class="text-center">{{ asset.categoryName }}</td>
+            <td class="text-center">{{ asset.location }}</td>
+            <td class="text-end">{{ asset.lastMovementAt ? asset.lastMovementAt|date('d/m/Y') : '---' }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="9" class="text-center text-muted">
+                no hay activos aun, use el formulario de la izquierda para añadir
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="9">
+            <nav aria-label="Table pagination" class="float-end">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <button
+                                class="page-link"
+                                aria-label="First"
+                                title="First"
+                                data-page="1"
+                                {{ stimulus_action('asset', 'onPaginate') }}
+                        >
+                            <i class="bi-rewind-fill"></i>
+                        </button>
+                    </li>
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <button
+                                class="page-link"
+                                aria-label="Previous"
+                                title="Previous"
+                                data-page="{{ page - 1 }}"
+                                {{ stimulus_action('asset', 'onPaginate') }}
+                        >
+                            <i class="bi-caret-left-fill"></i>
+                        </button>
+                    </li>
+
+                    {# page numbers #}
+                    {% set supTopLimit = page + 3 %}
+                    {% set infTopLimit = page - 3 %}
+                    {% set supBotLimit = pages - 2 %}
+                    {% set infBotLimit = 3 %}
+                    {% set supDots = false %}
+                    {% set infDots = false %}
+                    {% for item in 1..pages %}
+                        {% if item <= infBotLimit or (item >= infTopLimit and item <= supTopLimit) or item >= supBotLimit %}
+                            {% if item > 0 %}
+                                <li class="page-item {% if item == page %}active{% endif %}">
+                                    <button
+                                            class="page-link"
+                                            data-page="{{ item }}"
+                                            {{ stimulus_action('asset', 'onPaginate') }}
+                                    >
+                                        {{ item }}
+                                    </button>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            {% if not supDots and item > supTopLimit %}
+                                <li class="page-item disabled">
+                                    <button class="page-link">
+                                        ...
+                                    </button>
+                                </li>
+
+                                {% set supDots = true %}
+                            {% endif %}
+
+                            {% if not infDots and item < infTopLimit %}
+                                <li class="page-item disabled">
+                                    <button class="page-link">
+                                        ...
+                                    </button>
+                                </li>
+
+                                {% set infDots = true %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <li class="page-item {% if pages == 0 or page == pages %}disabled{% endif %}">
+                        <button
+                                class="page-link"
+                                aria-label="Next"
+                                title="Next"
+                                data-page="{{ page + 1 }}"
+                                {{ stimulus_action('asset', 'onPaginate') }}
+                        >
+                            <i class="bi-caret-right-fill"></i>
+                        </button>
+                    </li>
+                    <li class="page-item {% if pages == 0 or page == pages %}disabled{% endif %}">
+                        <button
+                                class="page-link"
+                                aria-label="Last"
+                                title="Last"
+                                data-page="{{ pages }}"
+                                {{ stimulus_action('asset', 'onPaginate') }}
+                        >
+                            <i class="bi-fast-forward-fill"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <small class="text-muted">Mostrando {{ total }} resultados en {{ pages }} páginas.</small>
+        </td>
+    </tr>
+    </tfoot>
+</table>

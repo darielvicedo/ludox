@@ -12,6 +12,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(fields: 'code', message: 'El activo con código {{ value }} ya existe.')]
 class Asset
 {
+    public const FIXED_ASSETS_ACCOUNTS = [
+        '10.3.240',
+        '10.3.241',
+        '10.3.242',
+        '10.3.243',
+        '10.3.244',
+        '10.3.245',
+        '10.3.246',
+        '10.3.247',
+        '10.3.248',
+        '10.3.249',
+        '10.3.250',
+        '10.3.251',
+        '10.3.252',
+        '10.3.253',
+        '10.3.254',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -155,5 +173,15 @@ class Asset
         $this->location = $location;
 
         return $this;
+    }
+
+    public function getValue(): int
+    {
+        return $this->getPrice() + $this->getCost();
+    }
+
+    public function getCategoryName(): ?string
+    {
+        return AssetCategoryTypeEnum::getTypeName($this->getCategory());
     }
 }
