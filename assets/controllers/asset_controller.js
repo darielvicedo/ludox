@@ -1,5 +1,7 @@
 import {Controller} from '@hotwired/stimulus';
 
+import Swal from "sweetalert2";
+
 export default class extends Controller {
     static targets = [
         'dt',
@@ -10,9 +12,11 @@ export default class extends Controller {
     static values = {
         loadAssetsUrl: String,
         newAssetFormUrl: String,
+        assetToEntryUrl: String,
     };
 
     page = 1;
+    all = false;
 
     connect() {
         this.loadNewForm();
@@ -121,16 +125,87 @@ export default class extends Controller {
 
     /**
      * Select all visible rows.
-     *
-     * @param event
      */
-    selectAll(event) {
-        event.preventDefault();
-
+    selectAll() {
         const checks = document.getElementsByClassName('dt-row-select');
 
         for (const check of checks) {
-            check.checked = !check.checked;
+            check.checked = !this.all;
+        }
+
+        this.all = !this.all;
+    }
+
+    /**
+     * Unselect all visible rows.
+     */
+    unselectAll() {
+        const checks = document.getElementsByClassName('dt-row-select');
+
+        for (const check of checks) {
+            check.checked = false;
+        }
+    }
+
+    /**
+     * Creates account entry from assets.
+     *
+     * @param event
+     */
+    toEntry(event) {
+        event.preventDefault();
+
+        // lock select
+        const select = event.currentTarget;
+        select.disabled = true;
+
+        // get account id
+        const accountId = select.value;
+
+        // get selected rows
+        const assets = [];
+        const checks = document.getElementsByClassName('dt-row-select');
+        for (const check of checks) {
+            if (check.checked) {
+                assets.push(check.dataset.assetId);
+            }
+        }
+
+        // confirm
+        if (window.confirm("Creates account entries from " + assets.length + " selected elements?")) {
+            fetch(this.assetToEntryUrlValue, {
+                method: 'post',
+                body: JSON.stringify({
+                    accountId: accountId,
+                    assets: assets,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+                .then(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        icon: 'success',
+                        title: 'OK',
+                        text: 'Los asientos contables fueron creados.'
+                    });
+                })
+                .catch((reason) => {
+                    console.error(reason);
+                })
+                .finally(() => {
+                    this.unselectAll();
+                    select.selectedIndex = 0;
+                    select.disabled = false;
+                });
         }
     }
 }

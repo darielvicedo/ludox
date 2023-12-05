@@ -19,7 +19,7 @@ class AccountEntry
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $annotatedAt = null;
+    private ?\DateTimeImmutable $annotatedAt;
 
     #[ORM\Column(length: 255)]
     private ?string $concept = null;

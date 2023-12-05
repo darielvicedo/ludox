@@ -75,4 +75,15 @@ class AssetRepository extends ServiceEntityRepository
 
         return [$query->getQuery()->getResult(), $total, $pages];
     }
+
+    public function fetchByIdArray(array $ids)
+    {
+        $query = $this->createQueryBuilder('a');
+
+        $query
+            ->setParameter('ids', $ids)
+            ->where('a.id IN (:ids)');
+
+        return $query->getQuery()->getResult();
+    }
 }

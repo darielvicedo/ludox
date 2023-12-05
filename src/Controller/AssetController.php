@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Entity\AccountEntry;
 use App\Entity\Asset;
 use App\Entity\Location;
 use App\Enum\AssetCategoryTypeEnum;
@@ -76,6 +77,36 @@ class AssetController extends AbstractController
             'pages' => $result[2],
             'page' => $filter['filter_page'],
         ]);
+    }
+
+    #[Route('/asset-to-entry', name: 'asset_to_entry', methods: ['POST'])]
+    public function createEntries(Request $request): Response
+    {
+        $data = $request->toArray();
+
+        // fetch account
+        $account = $this->em->getRepository(Account::class)->find($data['accountId']);
+        if (!$account) {
+            return new Response("Account not found.", Response::HTTP_NOT_FOUND);
+        }
+
+        // fetch assets
+        $assets = $this->em->getRepository(Asset::class)->fetchByIdArray($data['assets']);
+        /** @var Asset $asset */
+        foreach ($assets as $asset) {
+            $entry = new AccountEntry();
+            $entry
+                ->setAccount($account)
+                ->setConcept($asset->getName());
+
+            $account->isCredit() ? $entry->setCredit($asset->getValue()) : $entry->setDebit($asset->getValue());
+
+            $this->em->persist($entry);
+        }
+
+        $this->em->flush();
+
+        return new Response();
     }
 
     #[Route('/{id}', name: 'app_asset_show', methods: ['GET'])]
