@@ -40,7 +40,7 @@ class LudoUserCreateCommand extends Command
             ->addOption('super', 's', InputOption::VALUE_NONE, 'Make super user');
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $name = $input->getArgument('name');
         $username = $input->getArgument('username');
