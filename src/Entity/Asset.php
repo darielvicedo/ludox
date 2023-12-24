@@ -60,6 +60,9 @@ class Asset
     #[ORM\JoinColumn(nullable: false)]
     private ?Location $location = null;
 
+    #[ORM\ManyToOne(inversedBy: 'assets')]
+    private ?Game $game = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -183,5 +186,17 @@ class Asset
     public function getCategoryName(): ?string
     {
         return AssetCategoryTypeEnum::getTypeName($this->getCategory());
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): static
+    {
+        $this->game = $game;
+
+        return $this;
     }
 }
