@@ -32,6 +32,7 @@ class Account
     private ?int $type;
 
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: AccountEntry::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $entries;
 
     public function __construct()

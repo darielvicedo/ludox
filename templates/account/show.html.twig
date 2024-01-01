@@ -95,7 +95,7 @@
                         {% for entry in account.entries %}
                             <tr>
                                 <td class="text-end">{{ entry.annotatedAt|date('d/m/Y') }}</td>
-                                <td class="fw-bold">{{ entry.concept }}</td>
+                                <td class="fw-bold">{{ entry.concept|upper }}</td>
                                 <td class="text-end font-monospace">
                                     {% set debit = entry.debit %}
                                     {% if debit == 0 %}
