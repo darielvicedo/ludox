@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/asset')]
 class AssetController extends AbstractController
@@ -102,6 +102,29 @@ class AssetController extends AbstractController
             $account->isCredit() ? $entry->setCredit($asset->getValue()) : $entry->setDebit($asset->getValue());
 
             $this->em->persist($entry);
+        }
+
+        $this->em->flush();
+
+        return new Response();
+    }
+
+    #[Route('/asset-to-location', name: 'asset_to_location', methods: ['POST'])]
+    public function assetToLocation(Request $request): Response
+    {
+        $data = $request->toArray();
+
+        // fetch location
+        $location = $this->em->getRepository(Location::class)->find($data['locationId']);
+        if (!$location) {
+            return new Response("Location not found.", Response::HTTP_NOT_FOUND);
+        }
+
+        // fetch assets
+        $assets = $this->em->getRepository(Asset::class)->fetchByIdArray($data['assets']);
+        /** @var Asset $asset */
+        foreach ($assets as $asset) {
+            $asset->setLocation($location);
         }
 
         $this->em->flush();

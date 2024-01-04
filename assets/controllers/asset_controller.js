@@ -13,6 +13,7 @@ export default class extends Controller {
         loadAssetsUrl: String,
         newAssetFormUrl: String,
         assetToEntryUrl: String,
+        assetToLocationUrl: String,
     };
 
     page = 1;
@@ -196,6 +197,68 @@ export default class extends Controller {
                         icon: 'success',
                         title: 'OK',
                         text: 'Los asientos contables fueron creados.'
+                    });
+                })
+                .catch((reason) => {
+                    console.error(reason);
+                })
+                .finally(() => {
+                    this.unselectAll();
+                    select.selectedIndex = 0;
+                    select.disabled = false;
+                });
+        }
+    }
+
+    /**
+     * Change de location of the selected assets.
+     *
+     * @param event
+     */
+    toLocation(event) {
+        event.preventDefault();
+
+        // lock select
+        const select = event.currentTarget;
+        select.disabled = true;
+
+        // get account id
+        const locationId = select.value;
+
+        // get selected rows
+        const assets = [];
+        const checks = document.getElementsByClassName('dt-row-select');
+        for (const check of checks) {
+            if (check.checked) {
+                assets.push(check.dataset.assetId);
+            }
+        }
+
+        // confirm
+        if (window.confirm("Change de location of " + assets.length + " selected elements?")) {
+            fetch(this.assetToLocationUrlValue, {
+                method: 'post',
+                body: JSON.stringify({
+                    locationId: locationId,
+                    assets: assets,
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+                .then(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        icon: 'success',
+                        title: 'OK',
+                        text: 'La ubicación fue cambiada.'
                     });
                 })
                 .catch((reason) => {
