@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Asset;
+use App\Enum\AssetCategoryTypeEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -85,5 +86,15 @@ class AssetRepository extends ServiceEntityRepository
             ->where('a.id IN (:ids)');
 
         return $query->getQuery()->getResult();
+    }
+
+    public function findAvailableGames()
+    {
+        return $this->createQueryBuilder('a')
+            ->setParameter('category', AssetCategoryTypeEnum::CATEGORY_GAMES)
+            ->where('a.game IS NULL')
+            ->andWhere('a.category = :category')
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -1,0 +1,32 @@
+{{ form_start(form, {'attr': {'class': 'row g-3', 'data-action': 'asset#new'}}) }}
+<div class="col-12">
+    {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.minAge, 'Edad', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.minAge, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.minPlayers, 'Mínimos', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.minPlayers, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.maxPlayers, 'Máximos', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.maxPlayers, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 col-md-4">
+    {{ form_label(form.difficulty, 'Dificultad', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.difficulty, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="col-12 text-end">
+    <button type="submit" class="btn btn-sm btn-{{ button_class|default('success') }} text-white">
+        {{ button_label|default('Crear') }}
+    </button>
+</div>
+{{ form_end(form) }}

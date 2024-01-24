@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ game.name }}{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item"><a href="{{ path('app_game_index') }}">Juegos</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('app_game_show', {'id': game.id}) }}">{{ game.name }}</a></li>
+    <li class="breadcrumb-item active">Editar</li>
+{% endblock %}
+
+{% block content %}
+    <div {{ stimulus_controller('game-edit', {
+        loadAssetsForm: path('view_form_assets_select'),
+        addAssetUrl: path('app_game_add_asset', {'id': game.id}),
+        loadAssetsTableUrl: path('app_game_assets_table', {'id': game.id})
+    }) }}>
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('game/_form.html.twig', {'button_label': 'Cambiar', 'button_class': 'warning'}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">Activos</div>
+                    <div class="card-body shadow-primary-inset">
+                        <div {{ stimulus_target('game-edit', 'selectForm') }}></div>
+                    </div>
+                    <div class="card-body p-0" {{ stimulus_target('game-edit', 'assetsTable') }}>
+                        {{ include('fragments/_spinner.html.twig') }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3"></div>
+        </div>
+    </div>
+{% endblock %}

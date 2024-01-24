@@ -1,0 +1,76 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Juegos{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Juegos</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-3">
+            {# New Form #}
+            <div class="card border-success mb-3">
+                <div class="card-header bg-success fw-bold text-white-50">NUEVO JUEGO</div>
+                <div class="card-body">
+                    {{ include('game/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-9">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="text-center"><i class="bi-image-fill"></i></th>
+                    <th>Juego</th>
+                    <th class="text-center">Edad Mínima</th>
+                    <th class="text-center">Jugadores</th>
+                    <th class="text-center">Dificultad /5</th>
+                    <th class="text-center">Inventario</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for game in games %}
+                    <tr>
+                        <td class="text-center">
+                            {% if game.imageName %}
+                                <img
+                                        src="{{ vich_uploader_asset(game) }}"
+                                        alt="{{ game.name }}"
+                                        height="20"
+                                >
+                            {% else %}
+                                <i class="bi-image-fill"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_game_show', {'id': game.id}) }}">
+                                {{ game.name }}
+                            </a>
+                        </td>
+                        <td class="text-center font-monospace">{{ game.minAge }}</td>
+                        <td class="text-center font-monospace">
+                            {% if game.minPlayers == game.maxPlayers %}
+                                {{ game.minPlayers }}
+                            {% else %}
+                                {{ game.minPlayers }}
+                                -
+                                {{ game.maxPlayers ?: 'x' }}
+                            {% endif %}
+                        </td>
+                        <td class="text-center font-monospace">
+                            {{ game.difficulty ? game.difficulty|number_format(2) : '---' }}
+                        </td>
+                        <td class="text-center font-monospace">{{ game.assets|length }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">no hay juegos</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+<table class="table table-striped m-0">
+    <thead>
+    <tr>
+        <th class="text-end">C&oacute;digo</th>
+        <th>Nombre</th>
+        <th class="text-end">Valor</th>
+        <th class="text-end">Ubicaci&oacute;n</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assets %}
+        <tr>
+            <td class="text-end fw-bold">{{ asset.code }}</td>
+            <td>{{ asset.name|upper }}</td>
+            <td class="text-end font-monospace fw-bold">
+                {{ asset.value|money|format_currency('USD') }}
+            </td>
+            <td class="text-end">{{ asset.location }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4" class="text-center text-muted">este juego no tiene activos</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,20 @@
+<form class="row" {{ stimulus_action('game-edit', 'addAsset') }}>
+    <div class="col-12 col-md-10">
+        <label for="asset" class="form-label visually-hidden"></label>
+        <select id="asset" name="assetId" class="form-select">
+            <option>Seleccione un activo...</option>
+            {% for asset in assets %}
+                <option value="{{ asset.id }}">{{ asset.code }} {{ asset.name|upper }}</option>
+            {% endfor %}
+        </select>
+        <div class="form-text text-end mt-0">Quedan {{ assets|length }} juegos disponibles.</div>
+    </div>
+
+    <div class="col-12 col-md-1">
+        <button
+                class="btn btn-success text-white-50"
+        >
+            A&ntilde;adir
+        </button>
+    </div>
+</form>

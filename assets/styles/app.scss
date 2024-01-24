@@ -2,11 +2,16 @@
 
 @import "bootstrap";
 @import "bootstrap-icons";
+@import "~dropzone/dist/dropzone.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Suez+One&display=swap');
 
 body {
   background-color: #f3f3f3;
+}
+
+.shadow-primary-inset {
+  box-shadow: 0 0 5px inset rgba(95, 56, 139, .4);
 }
 
 .fs-suez {
@@ -55,5 +60,13 @@ body {
     .nav-link {
       letter-spacing: 0.8px;
     }
+  }
+}
+
+.dropzone {
+  min-height: 50px;
+
+  .dz-message {
+    margin: 1em 0 !important;
   }
 }

@@ -37,9 +37,6 @@ class Game
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $maxPlayers = null;
 
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Asset::class)]
-    private Collection $assets;
-
     #[Vich\UploadableField(mapping: 'games', fileNameProperty: 'imageName', size: 'imageSize')]
     private ?File $imageFile = null;
 
@@ -51,6 +48,13 @@ class Game
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(min: 0, max: 5)]
+    private ?float $difficulty = 0;
+
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Asset::class)]
+    private Collection $assets;
 
     public function __construct()
     {
@@ -201,6 +205,18 @@ class Game
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDifficulty(): ?float
+    {
+        return $this->difficulty;
+    }
+
+    public function setDifficulty(?float $difficulty): static
+    {
+        $this->difficulty = $difficulty;
 
         return $this;
     }
