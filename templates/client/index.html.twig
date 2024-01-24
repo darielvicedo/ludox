@@ -30,9 +30,9 @@
             <tbody>
             {% for client in clients %}
                 <tr>
-                    <td>{{ client.ci }}</td>
+                    <td class="font-monospace">{{ client.ci }}</td>
                     <td>{{ client.name }}</td>
-                    <td class="text-center">{{ client.age }}</td>
+                    <td class="text-center font-monospace">{{ client.age }}</td>
                 </tr>
             {% else %}
                 <tr>
