@@ -1,0 +1,46 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Clientes</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 col-md-3">
+        {# New Form #}
+        <div class="card border-success mb-3">
+            <div class="card-header bg-success fw-bold text-white-50">NUEVO CLIENTE</div>
+            <div class="card-body">
+                {{ include('client/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>CI</th>
+                <th>Nombre</th>
+                <th class="text-center">Edad</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.ci }}</td>
+                    <td>{{ client.name }}</td>
+                    <td class="text-center">{{ client.age }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">no hay clientes</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
