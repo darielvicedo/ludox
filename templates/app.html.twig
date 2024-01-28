@@ -3,78 +3,84 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-12 col-md-2">
-            <ul class="nav flex-column" id="mainSidebar">
-                <li class="nav-header text-center mb-2 badge bg-secondary mx-auto">
-                    <small>ludoteca</small>
-                </li>
-                <li class="nav-item mb-2 border rounded">
-                    <a
-                            class="nav-link fw-bold text-danger"
-                            aria-current="page"
-                            href="{{ path('app_game_index') }}"
+    <div {{ stimulus_controller('main', {
+        fetchClientByCi: path('client_api_getby_ci'),
+        newTicketUrl: path('api_ticket_new'),
+        loadDailyTicketsUrl: path('ticket_api_get_validtoday')
+    }) }}>
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <h2 class="h5 border-bottom border-2 pb-2 d-flex justify-content-between align-items-center">
+                    <span>Pases de hoy</span>
+                    <button
+                            type="button"
+                            class="btn btn-link"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#ticketCollapseForm"
+                            aria-expanded="false"
+                            aria-controls="ticketCollapseForm"
                     >
-                        Juegos
-                    </a>
-                </li>
-                <li class="nav-item mb-2 border rounded">
-                    <a
-                            class="nav-link fw-bold text-danger"
-                            aria-current="page"
-                            href="{{ path('app_client_index') }}"
+                        <i class="bi-plus-lg"></i>
+                    </button>
+                </h2>
+
+                <div class="collapse mb-3" id="ticketCollapseForm">
+                    <form
+                            class="row g-3"
+                            autocomplete="off"
+                            {{ stimulus_action('main', 'submitTicket') }}
                     >
-                        Clientes
-                    </a>
-                </li>
-                <li class="nav-header text-center mb-2 mt-3 badge bg-secondary mx-auto">
-                    <small>administración</small>
-                </li>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item mb-2 border rounded">
-                        <a
-                                class="nav-link fw-bold text-danger"
-                                aria-current="page"
-                                href="{{ path('app_location_index') }}"
-                        >
-                            Ubicaciones
-                        </a>
-                    </li>
-                {% endif %}
-                <li class="nav-header text-center mb-2 mt-3 badge bg-secondary mx-auto">
-                    <small>contabilidad e inventario</small>
-                </li>
-                {% if is_granted('ROLE_ACCOUNT') %}
-                    <li class="nav-item mb-2 border rounded">
-                        <a
-                                class="nav-link fw-bold text-danger"
-                                aria-current="page"
-                                href="{{ path('app_account_index') }}"
-                        >
-                            Cuentas
-                        </a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ACCOUNT') %}
-                    <li class="nav-item mb-2 border rounded">
-                        <a
-                                class="nav-link fw-bold text-danger"
-                                aria-current="page"
-                                href="{{ path('app_asset_index') }}"
-                        >
-                            Activos Fijos
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+                        <div class="col-12 col-md-8">
+                            <label for="ticketCi" class="visually-hidden">CI</label>
+                            <input
+                                    type="text"
+                                    id="ticketCi"
+                                    name="ticketCi"
+                                    class="form-control"
+                                    minlength="11"
+                                    maxlength="11"
+                                    placeholder="CARNE DE IDENTIDAD"
+                                    required
+                                    {{ stimulus_action('main', 'onCiChange') }}
+                            >
+                        </div>
 
-        <div class="col-12 col-md-7">
-            center
-        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="ticketCoupon" class="visually-hidden">Cup&oacute;n</label>
+                            <input
+                                    type="text"
+                                    id="ticketCoupon"
+                                    name="ticketCoupon"
+                                    class="form-control"
+                                    placeholder="CUPON"
+                            >
+                        </div>
 
-        <div class="col-12 col-md-3">
-            right
+                        <div class="col-12">
+                            <label for="ticketName" class="visually-hidden">Nombre</label>
+                            <input
+                                    type="text"
+                                    id="ticketName"
+                                    name="ticketName"
+                                    class="form-control"
+                                    placeholder="NOMBRE"
+                                    required
+                                    style="text-transform: uppercase;"
+                            >
+                        </div>
+
+                        <input type="submit" hidden/>
+                    </form>
+                </div>
+
+                <div {{ stimulus_target('main', 'dailyTicketsList') }}>
+                    {{ include('fragments/_spinner.html.twig') }}
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6"></div>
+
+            <div class="col-12 col-md-3"></div>
         </div>
     </div>
 {% endblock %}

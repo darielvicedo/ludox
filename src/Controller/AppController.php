@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AppController extends AbstractController
 {
@@ -15,5 +15,11 @@ class AppController extends AbstractController
     public function app(): Response
     {
         return $this->render('app.html.twig', []);
+    }
+
+    #[Route('/admin', name: 'admin', methods: ['GET'])]
+    public function admin(): Response
+    {
+        return $this->render('admin.html.twig');
     }
 }

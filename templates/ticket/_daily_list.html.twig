@@ -1,0 +1,38 @@
+{% for ticket in tickets %}
+    <div class="card border-0 shadow-sm mb-2">
+        <div class="card-body">
+            <div class="d-flex justify-content-start align-items-center">
+                {% if ticket.client.isMale %}
+                    <img
+                            src="{{ asset('build/img/generic-male-avatar.png') }}"
+                            class="rounded me-3"
+                            alt="Generic male avatar"
+                            height="50"
+                    >
+                {% else %}
+                    <img
+                            src="{{ asset('build/img/generic-female-avatar.png') }}"
+                            class="rounded me-3"
+                            alt="Generic female avatar"
+                            height="50"
+                    >
+                {% endif %}
+
+                <div>
+                    <strong>{{ ticket.client.name }}</strong><br>
+                    <small class="text-muted">
+                        {{ ticket.createdAt|date('d M, H:i') }}
+                        &bull;
+                        {{ ticket.client.ci }}
+                    </small>
+                </div>
+
+                <h3 class="h6"></h3>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <p class="text-center text-muted">
+        <small>no hay pases para hoy</small>
+    </p>
+{% endfor %}

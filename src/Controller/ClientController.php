@@ -64,6 +64,19 @@ class ClientController extends AbstractController
         ]);
     }
 
+    #[Route('/api/get-by-ci', name: 'client_api_getby_ci', methods: ['GET'])]
+    public function getByCi(Request $request): Response
+    {
+        $data = $request->query->all();
+
+        $user = $this->em->getRepository(Client::class)->findOneBy(['ci' => $data['ci']]);
+        if ($user) {
+            return $this->json($user);
+        }
+
+        return new Response('User not found.', Response::HTTP_NOT_FOUND);
+    }
+
     #[Route('/{id}', name: 'app_client_show', methods: ['GET'])]
     public function show(Client $client): Response
     {

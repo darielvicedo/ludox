@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ClientRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\Length;
@@ -24,6 +26,14 @@ class Client
     #[ORM\Column(length: 11, unique: true)]
     #[Length(min: 11, max: 11)]
     private ?string $ci = null;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Ticket::class, orphanRemoval: true)]
+    private Collection $tickets;
+
+    public function __construct()
+    {
+        $this->tickets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,5 +77,42 @@ class Client
         $age = $now->diff($birthday);
 
         return $age->y;
+    }
+
+    public function isMale(): bool
+    {
+        $digit = (int)$this->ci[9];
+
+        return $digit % 2 === 0;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getClient() === $this) {
+                $ticket->setClient(null);
+            }
+        }
+
+        return $this;
     }
 }
