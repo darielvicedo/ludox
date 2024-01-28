@@ -84,4 +84,12 @@ class Ticket
 
         return $this;
     }
+
+    public function isFromToday(): bool
+    {
+        $start = new \DateTimeImmutable('today 00:00:00');
+        $end = new \DateTimeImmutable('today 23:59:59');
+
+        return $this->getCreatedAt() >= $start && $this->getCreatedAt() <= $end;
+    }
 }

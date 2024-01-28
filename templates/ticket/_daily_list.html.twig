@@ -18,7 +18,7 @@
                     >
                 {% endif %}
 
-                <div>
+                <div class="flex-grow-1">
                     <strong>{{ ticket.client.name }}</strong><br>
                     <small class="text-muted">
                         {{ ticket.createdAt|date('d M, H:i') }}
@@ -27,7 +27,15 @@
                     </small>
                 </div>
 
-                <h3 class="h6"></h3>
+                <div>
+                    {% if ticket.isFromToday %}
+                        <span class="font-monospace">
+                        {{ ticket.price|money|format_currency('USD') }}
+                    </span>
+                    {% else %}
+                        <span class="badge bg-secondary">pagado</span>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
