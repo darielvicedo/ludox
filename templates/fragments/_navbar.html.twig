@@ -25,15 +25,18 @@
         </button>
         <div class="collapse navbar-collapse" id="appNavbar">
             <ul class="navbar-nav align-items-center me-3">
-{#                {% if is_granted('ROLE_ADMIN') %}#}
-                    <li class="nav-item border-end px-2">
-                        <a href="#" class="nav-link">
-                            <i class="bi-people-fill"></i>
-                        </a>
-                    </li>
-{#                {% endif %}#}
+                <li class="nav-item border-end px-2">
+                    <a href="#" class="nav-link">
+                        <i class="bi-people-fill"></i>
+                    </a>
+                </li>
+                <li class="nav-item border-end px-2">
+                    <a href="{{ path('admin') }}" class="nav-link">
+                        <i class="bi-gear-fill"></i>
+                    </a>
+                </li>
             </ul>
-{#            {{ render(controller('App\\Controller\\AppController::renderNavbarNetValue')) }}#}
+            {#            {{ render(controller('App\\Controller\\AppController::renderNavbarNetValue')) }} #}
 
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item me-3">
