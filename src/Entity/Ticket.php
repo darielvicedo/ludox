@@ -27,6 +27,9 @@ class Ticket
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
+    #[ORM\OneToOne]
+    private ?Coupon $coupon = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -91,5 +94,17 @@ class Ticket
         $end = new \DateTimeImmutable('today 23:59:59');
 
         return $this->getCreatedAt() >= $start && $this->getCreatedAt() <= $end;
+    }
+
+    public function getCoupon(): ?Coupon
+    {
+        return $this->coupon;
+    }
+
+    public function setCoupon(?Coupon $coupon): static
+    {
+        $this->coupon = $coupon;
+
+        return $this;
     }
 }
