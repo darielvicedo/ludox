@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -18,21 +19,28 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('client:get:simple')]
     private ?int $id = null;
 
     #[ORM\Column(length: 64)]
+    #[Groups('client:get:simple')]
     private ?string $name = null;
 
     #[ORM\Column(length: 11, unique: true)]
     #[Length(min: 11, max: 11)]
+    #[Groups('client:get:simple')]
     private ?string $ci = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Ticket::class, orphanRemoval: true)]
     private Collection $tickets;
 
+    #[ORM\ManyToMany(targetEntity: Session::class, mappedBy: 'clients')]
+    private Collection $sessions;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +119,33 @@ class Client
             if ($ticket->getClient() === $this) {
                 $ticket->setClient(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): static
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->addClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): static
+    {
+        if ($this->sessions->removeElement($session)) {
+            $session->removeClient($this);
         }
 
         return $this;

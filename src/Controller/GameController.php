@@ -71,6 +71,18 @@ class GameController extends AbstractController
         ]);
     }
 
+    #[Route('/api/search-query', name: 'game_api_fetch_query', methods: ['POST'])]
+    public function searchByQuery(Request $request): Response
+    {
+        $data = $request->toArray();
+
+        $result = $this->em->getRepository(Game::class)->findByQuery('name', $data['query'], $data['maxResults']);
+
+        return $this->json($result, Response::HTTP_OK, [], [
+            'groups' => ['game:get:simple'],
+        ]);
+    }
+
     #[Route('/{id}', name: 'app_game_show', methods: ['GET'])]
     public function show(Game $game): Response
     {

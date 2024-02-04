@@ -69,9 +69,13 @@ class ClientController extends AbstractController
     {
         $data = $request->query->all();
 
-        $user = $this->em->getRepository(Client::class)->findOneBy(['ci' => $data['ci']]);
-        if ($user) {
-            return $this->json($user);
+        $client = $this->em->getRepository(Client::class)->findOneBy(['ci' => $data['ci']]);
+        if ($client) {
+            return $this->json($client, Response::HTTP_OK, [], [
+                'groups' => [
+                    'client:get:simple',
+                ],
+            ]);
         }
 
         return new Response('User not found.', Response::HTTP_NOT_FOUND);

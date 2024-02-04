@@ -6,15 +6,19 @@
     <div {{ stimulus_controller('main', {
         fetchClientByCi: path('client_api_getby_ci'),
         newTicketUrl: path('api_ticket_new'),
-        loadDailyTicketsUrl: path('ticket_api_get_validtoday')
+        loadDailyTicketsUrl: path('ticket_api_get_validtoday'),
+        newSessionUrl: path('session_api_new'),
+        loadActiveSessionsUrl: path('session_api_get_active'),
+        loadFinishedSessionsUrl: path('session_api_get_finished'),
+        sessionFinishUrl: path('session_api_finish')
     }) }}>
         <div class="row">
             <div class="col-12 col-md-3">
                 <h2 class="h5 border-bottom border-2 pb-2 d-flex justify-content-between align-items-center">
-                    <span>Pases de hoy</span>
+                    <span>Pases</span>
                     <button
                             type="button"
-                            class="btn btn-link"
+                            class="btn btn-link p-0"
                             data-bs-toggle="collapse"
                             data-bs-target="#ticketCollapseForm"
                             aria-expanded="false"
@@ -52,7 +56,10 @@
                                     id="ticketCoupon"
                                     name="ticketCoupon"
                                     class="form-control"
+                                    minlength="6"
+                                    maxlength="6"
                                     placeholder="CUPON"
+                                    style="text-transform: uppercase;"
                             >
                         </div>
 
@@ -78,9 +85,63 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-6"></div>
+            {# SESIONES #}
+            <div class="col-12 col-md-4">
+                <h2 class="h5 border-bottom border-2 pb-2">Sesiones activas</h2>
 
-            <div class="col-12 col-md-3"></div>
+                <div {{ stimulus_target('main', 'activeSessions') }} class="mb-4">
+                    {{ include('fragments/_spinner.html.twig') }}
+                </div>
+
+                <h2 class="h5 border-bottom border-2 pb-2">Sesiones terminadas</h2>
+
+                <div {{ stimulus_target('main', 'finishedSessions') }}>
+                    {{ include('fragments/_spinner.html.twig') }}
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <h2 class="h5 border-bottom border-2 pb-2">Nueva sessi&oacute;n</h2>
+
+                <form
+                        class="row g-3"
+                        {{ stimulus_action('main', 'submitSession') }}
+                >
+                    <div class="col-12">
+                        <label for="sessionGame" class="visually-hidden">Juego:</label>
+                        <select id="sessionGame" name="sessionGame" class="form-select" required>
+                            <option value="" selected>Seleccione el juego...</option>
+                            {% for game in games %}
+                                <option value="{{ game.id }}">{{ game.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-12 ps-4">
+                        <h3 class="h6">Jugadores:</h3>
+                        {% for ticket in tickets %}
+                            <div class="form-check">
+                                <input
+                                        id="ticket{{ ticket.id }}"
+                                        name="sessionClient[{{ ticket.client.id }}]"
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        value="{{ ticket.client.id }}"
+                                >
+                                <label for="ticket{{ ticket.id }}" class="form-check-label">
+                                    {{ ticket.client.name }}
+                                </label>
+                            </div>
+                        {% else %}
+                            <small class="form-text">no hay pases disponibles hoy</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-sm btn-success text-white-50 fw-bold">CREAR</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

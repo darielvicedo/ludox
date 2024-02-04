@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -19,12 +20,14 @@ class Game
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game:get:simple'])]
     private ?int $id = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['game:get:simple'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
@@ -56,10 +59,14 @@ class Game
     #[ORM\OneToMany(mappedBy: 'game', targetEntity: Asset::class)]
     private Collection $assets;
 
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Session::class, orphanRemoval: true)]
+    private Collection $sessions;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->assets = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +224,36 @@ class Game
     public function setDifficulty(?float $difficulty): static
     {
         $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): static
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): static
+    {
+        if ($this->sessions->removeElement($session)) {
+            // set the owning side to null (unless already changed)
+            if ($session->getGame() === $this) {
+                $session->setGame(null);
+            }
+        }
 
         return $this;
     }

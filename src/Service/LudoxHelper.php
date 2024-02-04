@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Coupon;
+use App\Enum\CouponTypeEnum;
+
 class LudoxHelper
 {
     private const DICTIONARY = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -33,5 +36,19 @@ class LudoxHelper
         }
 
         return $unique;
+    }
+
+    /**
+     * Calculates the price when using coupon.
+     *
+     * @param Coupon $coupon
+     * @param int $price
+     * @return int
+     */
+    public function calculateCouponTicketPrice(Coupon $coupon, int $price): int
+    {
+        return match ($coupon->getType()) {
+            CouponTypeEnum::COUPON_PERCENT_DISCOUNT => ($coupon->getValue() * $price) / 100,
+        };
     }
 }

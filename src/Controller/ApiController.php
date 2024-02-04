@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Account;
 use App\Entity\AccountEntry;
 use App\Entity\Client;
+use App\Entity\Coupon;
 use App\Entity\Ticket;
+use App\Service\LudoxHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,9 +19,12 @@ class ApiController extends AbstractController
 {
     private EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em)
+    private LudoxHelper $ludox;
+
+    public function __construct(EntityManagerInterface $em, LudoxHelper $ludox)
     {
         $this->em = $em;
+        $this->ludox = $ludox;
     }
 
     #[Route('/ticket/new', name: 'api_ticket_new', methods: ['POST'])]
@@ -37,15 +42,24 @@ class ApiController extends AbstractController
             $this->em->persist($client);
         }
 
+
         // create ticket
         $expire = new \DateTimeImmutable('today 23:59:59');
-        $price = $_ENV['DAILY_TICKET_PRICE'];
 
         $ticket = new Ticket();
         $ticket
             ->setExpiryAt($expire)
-            ->setPrice($price)
             ->setClient($client);
+
+        // coupon & price
+        $price = $_ENV['DAILY_TICKET_PRICE'];
+        $coupon = $this->em->getRepository(Coupon::class)->findOneBy(['code' => strtoupper($data['ticketCoupon'])]);
+        if ($coupon) {
+            $price = $this->ludox->calculateCouponTicketPrice($coupon, $price);
+            $ticket->setCoupon($coupon);
+            $coupon->setConsumedAt(new \DateTimeImmutable());
+        }
+        $ticket->setPrice($price);
         $this->em->persist($ticket);
 
         // account operation

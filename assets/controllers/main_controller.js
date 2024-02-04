@@ -3,16 +3,24 @@ import {Controller} from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = [
         'dailyTicketsList',
+        'activeSessions',
+        'finishedSessions',
     ];
 
     static values = {
         fetchClientByCi: String,
         newTicketUrl: String,
         loadDailyTicketsUrl: String,
+        newSessionUrl: String,
+        loadActiveSessionsUrl: String,
+        loadFinishedSessionsUrl: String,
+        sessionFinishUrl: String,
     };
 
     async connect() {
         await this.loadDailyTickets();
+        await this.loadActiveSessions();
+        await this.loadFinishedSessions();
     }
 
     async loadDailyTickets() {
@@ -30,6 +38,76 @@ export default class extends Controller {
             })
             .then((view) => {
                 this.dailyTicketsListTarget.innerHTML = view;
+            })
+            .catch((reason) => {
+                console.error(reason);
+            });
+    }
+
+    async loadActiveSessions() {
+        fetch(this.loadActiveSessionsUrlValue, {
+            method: 'get',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+
+                return response.text();
+            })
+            .then((view) => {
+                this.activeSessionsTarget.innerHTML = view;
+            })
+            .catch((reason) => {
+                console.error(reason);
+            });
+    }
+
+    async loadFinishedSessions() {
+        fetch(this.loadFinishedSessionsUrlValue, {
+            method: 'get',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+
+                return response.text();
+            })
+            .then((view) => {
+                this.finishedSessionsTarget.innerHTML = view;
+            })
+            .catch((reason) => {
+                console.error(reason);
+            });
+    }
+
+    async finishSession(event) {
+        event.preventDefault();
+
+        const button = event.target;
+        const sessionId = button.dataset.sessionId;
+
+        fetch(this.sessionFinishUrlValue, {
+            method: 'post',
+            body: JSON.stringify({
+                sessionId: sessionId,
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(async (view) => {
+                await this.loadActiveSessions();
+                await this.loadFinishedSessions();
             })
             .catch((reason) => {
                 console.error(reason);
@@ -94,6 +172,31 @@ export default class extends Controller {
             .then(async () => {
                 form.reset();
                 await this.loadDailyTickets();
+            })
+            .catch((reason) => {
+                console.error(reason);
+            });
+    }
+
+    async submitSession(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const data = new FormData(form);
+
+        fetch(this.newSessionUrlValue, {
+            method: 'post',
+            body: data,
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(async () => {
+                form.reset();
             })
             .catch((reason) => {
                 console.error(reason);
