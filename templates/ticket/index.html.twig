@@ -1,39 +1,50 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block title %}Ticket index{% endblock %}
+{% block title %}Pases{% endblock %}
 
-{% block body %}
-    <h1>Ticket index</h1>
+{% block bread %}
+    <li class="breadcrumb-item d-flex justify-content-start align-items-center">
+        <a href="{{ path('admin') }}" class="pr-md-3 pl-md-2 pr-2 pl-1">Administraci&oacute;n</a>
+    </li>
+    <li class="breadcrumb-item active">Pases</li>
+{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>CreatedAt</th>
-                <th>ExpiryAt</th>
-                <th>Price</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ticket in tickets %}
-            <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.createdAt ? ticket.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.expiryAt ? ticket.expiryAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.price }}</td>
-                <td>
-                    <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}">show</a>
-                    <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_ticket_new') }}">Create new</a>
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">PASES</div>
+                <div class="card-body p-0">
+                    <table class="table table-striped m-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Price</th>
+                            <th class="text-center">Cup&oacute;n</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ticket in tickets %}
+                            <tr>
+                                <th class="text-center">{{ ticket.id }}</th>
+                                <td>{{ ticket.createdAt|date('d M, Y') }}</td>
+                                <td>{{ ticket.client.name }}</td>
+                                <td>{{ ticket.price|money|format_currency('USD') }}</td>
+                                <td class="text-center">
+                                    {{ ticket.coupon ? ticket.coupon.code : '---' }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

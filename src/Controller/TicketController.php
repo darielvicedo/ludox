@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/ticket')]
+#[Route('/admin/ticket')]
 class TicketController extends AbstractController
 {
     private EntityManagerInterface $em;
@@ -21,15 +21,17 @@ class TicketController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/', name: 'app_ticket_index', methods: ['GET'])]
-    public function index(TicketRepository $ticketRepository): Response
+    #[Route('/', name: 'ticket_index', methods: ['GET'])]
+    public function index(): Response
     {
+        $tickets = $this->em->getRepository(Ticket::class)->findBy([], ['createdAt' => 'DESC']);
+
         return $this->render('ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findAll(),
+            'tickets' => $tickets,
         ]);
     }
 
-    #[Route('/new', name: 'app_ticket_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'ticket_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ticket = new Ticket();
@@ -40,7 +42,7 @@ class TicketController extends AbstractController
             $entityManager->persist($ticket);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ticket/new.html.twig', [
@@ -59,7 +61,7 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_ticket_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'ticket_show', methods: ['GET'])]
     public function show(Ticket $ticket): Response
     {
         return $this->render('ticket/show.html.twig', [
@@ -67,7 +69,7 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_ticket_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'ticket_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Ticket $ticket, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TicketType::class, $ticket);
@@ -76,7 +78,7 @@ class TicketController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('ticket/edit.html.twig', [
@@ -85,7 +87,7 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_ticket_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'ticket_delete', methods: ['POST'])]
     public function delete(Request $request, Ticket $ticket, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
@@ -93,6 +95,6 @@ class TicketController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_ticket_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('ticket_index', [], Response::HTTP_SEE_OTHER);
     }
 }
