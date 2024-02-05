@@ -7,40 +7,48 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12 col-md-3">
-        {# New Form #}
-        <div class="card border-success mb-3">
-            <div class="card-header bg-success fw-bold text-white-50">NUEVO CLIENTE</div>
-            <div class="card-body">
-                {{ include('client/_form.html.twig') }}
+    <div class="row">
+        <div class="col-12 col-md-3">
+            {# New Form #}
+            <div class="card border-success mb-3">
+                <div class="card-header bg-success fw-bold text-white-50">NUEVO CLIENTE</div>
+                <div class="card-body">
+                    {{ include('client/_form.html.twig') }}
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-9">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>CI</th>
-                <th>Nombre</th>
-                <th class="text-center">Edad</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for client in clients %}
+        <div class="col-12 col-md-9">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td class="font-monospace">{{ client.ci }}</td>
-                    <td>{{ client.name }}</td>
-                    <td class="text-center font-monospace">{{ client.age }}</td>
+                    <th>CI</th>
+                    <th>Nombre</th>
+                    <th class="text-center"><i class="bi-cake2-fill"></i></th>
+                    <th class="text-center">Edad</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3" class="text-center text-muted">no hay clientes</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for client in clients %}
+                    <tr>
+                        <td class="font-monospace">{{ client.ci }}</td>
+                        <td>{{ client.name }}</td>
+                        <td class="text-center">
+                            {% if client.birthday %}
+                                <i class="bi-cake2-fill text-success"></i>
+                            {% else %}
+                                {{ client.dOB|date('m/d') }}
+                            {% endif %}
+                        </td>
+                        <td class="text-center font-monospace">{{ client.age }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">no hay clientes</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 {% endblock %}

@@ -73,28 +73,6 @@ class Client
     }
 
     /**
-     * Calculates age from CI.
-     *
-     * @return int
-     */
-    public function getAge()
-    {
-        $datePart = substr($this->getCi(), 0, 6);
-        $birthday = DateTimeImmutable::createFromFormat('ymd H:i', $datePart . ' 00:00');
-        $now = new \DateTimeImmutable();
-        $age = $now->diff($birthday);
-
-        return $age->y;
-    }
-
-    public function isMale(): bool
-    {
-        $digit = (int)$this->ci[9];
-
-        return $digit % 2 === 0;
-    }
-
-    /**
      * @return Collection<int, Ticket>
      */
     public function getTickets(): Collection
@@ -149,5 +127,49 @@ class Client
         }
 
         return $this;
+    }
+
+    /**
+     * Gets clients DOB.
+     *
+     * @return \DateTimeInterface
+     */
+    public function getDOB(): \DateTimeInterface
+    {
+        $datePart = substr($this->getCi(), 0, 6);
+
+        return DateTimeImmutable::createFromFormat('ymd', $datePart);
+    }
+
+    /**
+     * Calculates age from CI.
+     *
+     * @return int
+     */
+    public function getAge()
+    {
+        $datePart = substr($this->getCi(), 0, 6);
+        $birthday = DateTimeImmutable::createFromFormat('ymd H:i', $datePart . ' 00:00');
+        $now = new \DateTimeImmutable();
+        $age = $now->diff($birthday);
+
+        return $age->y;
+    }
+
+    public function isMale(): bool
+    {
+        $digit = (int)$this->ci[9];
+
+        return $digit % 2 === 0;
+    }
+
+    /**
+     * Check if is clients birthday.
+     *
+     * @return bool
+     */
+    public function isBirthday(): bool
+    {
+        return $this->getDOB()->format('m-d') === date('m-d');
     }
 }

@@ -42,36 +42,44 @@ class ApiController extends AbstractController
             $this->em->persist($client);
         }
 
-
         // create ticket
         $expire = new \DateTimeImmutable('today 23:59:59');
-
         $ticket = new Ticket();
         $ticket
             ->setExpiryAt($expire)
             ->setClient($client);
 
-        // coupon & price
+        // get basic price
         $price = $_ENV['DAILY_TICKET_PRICE'];
-        $coupon = $this->em->getRepository(Coupon::class)->findOneBy(['code' => strtoupper($data['ticketCoupon'])]);
-        if ($coupon) {
-            $price = $this->ludox->calculateCouponTicketPrice($coupon, $price);
-            $ticket->setCoupon($coupon);
-            $coupon->setConsumedAt(new \DateTimeImmutable());
+
+        // check if birthday
+        if ($client->isBirthday()) {
+            $price = 0;
+        } else {
+            // coupon & price
+            $coupon = $this->em->getRepository(Coupon::class)->findOneBy(['code' => strtoupper($data['ticketCoupon'])]);
+            if ($coupon) {
+                $price = $this->ludox->calculateCouponTicketPrice($coupon, $price);
+                $ticket->setCoupon($coupon);
+                $coupon->setConsumedAt(new \DateTimeImmutable());
+            }
         }
+
+        // set the final price
         $ticket->setPrice($price);
         $this->em->persist($ticket);
 
         // account operation
-        $salesAccountCode = $_ENV['SALES_ACCOUNT'];
-        $account = $this->em->getRepository(Account::class)->findOneBy(['code' => $salesAccountCode]);
-
-        $accountEntry = new AccountEntry();
-        $accountEntry
-            ->setConcept('Venta de pase diario')
-            ->setCredit($ticket->getPrice())
-            ->setAccount($account);
-        $this->em->persist($accountEntry);
+        if ($ticket->getPrice() > 0) {
+            $salesAccountCode = $_ENV['SALES_ACCOUNT'];
+            $account = $this->em->getRepository(Account::class)->findOneBy(['code' => $salesAccountCode]);
+            $accountEntry = new AccountEntry();
+            $accountEntry
+                ->setConcept('Venta de pase diario')
+                ->setCredit($ticket->getPrice())
+                ->setAccount($account);
+            $this->em->persist($accountEntry);
+        }
 
         // persist to db
         $this->em->flush();
