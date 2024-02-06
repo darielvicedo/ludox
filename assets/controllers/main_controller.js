@@ -5,6 +5,7 @@ export default class extends Controller {
         'dailyTicketsList',
         'activeSessions',
         'finishedSessions',
+        'availablePlayers',
     ];
 
     static values = {
@@ -15,10 +16,12 @@ export default class extends Controller {
         loadActiveSessionsUrl: String,
         loadFinishedSessionsUrl: String,
         sessionFinishUrl: String,
+        loadAvailablePlayersUrl: String,
     };
 
     async connect() {
         await this.loadDailyTickets();
+        await this.loadAvailablePlayers();
         await this.loadActiveSessions();
         await this.loadFinishedSessions();
     }
@@ -86,6 +89,27 @@ export default class extends Controller {
             });
     }
 
+    async loadAvailablePlayers() {
+        fetch(this.loadAvailablePlayersUrlValue, {
+            method: 'get',
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+
+                return response.text();
+            })
+            .then((view) => {
+                this.availablePlayersTarget.innerHTML = view;
+            })
+            .catch((reason) => {
+                console.error(reason);
+            });
+    }
+
     async finishSession(event) {
         event.preventDefault();
 
@@ -108,6 +132,7 @@ export default class extends Controller {
             .then(async (view) => {
                 await this.loadActiveSessions();
                 await this.loadFinishedSessions();
+                await this.loadAvailablePlayers();
             })
             .catch((reason) => {
                 console.error(reason);
@@ -172,6 +197,7 @@ export default class extends Controller {
             .then(async () => {
                 form.reset();
                 await this.loadDailyTickets();
+                await this.loadAvailablePlayers();
             })
             .catch((reason) => {
                 console.error(reason);
@@ -206,6 +232,7 @@ export default class extends Controller {
 
                 await this.loadActiveSessions();
                 await this.loadFinishedSessions();
+                await this.loadAvailablePlayers();
             })
             .catch((reason) => {
                 console.error(reason);

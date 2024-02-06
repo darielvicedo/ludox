@@ -1,0 +1,16 @@
+{% for ticket in tickets %}
+    <div class="form-check">
+        <input
+                id="ticket{{ ticket.id }}"
+                name="sessionClient[{{ ticket.client.id }}]"
+                type="checkbox"
+                class="form-check-input"
+                value="{{ ticket.client.id }}"
+        >
+        <label for="ticket{{ ticket.id }}" class="form-check-label">
+            {{ ticket.client.name }}
+        </label>
+    </div>
+{% else %}
+    <small class="form-text">no hay jugadores disponibles</small>
+{% endfor %}

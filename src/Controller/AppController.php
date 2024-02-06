@@ -28,7 +28,7 @@ class AppController extends AbstractController
     public function app(): Response
     {
         $games = $this->em->getRepository(Game::class)->findBy([], ['name' => 'ASC']);
-        $tickets = $this->model->fetchAvailableTickets();
+        $tickets = $this->model->getAvailableClientsToday();
 
         return $this->render('app.html.twig', [
             'games' => $games,

@@ -172,4 +172,18 @@ class Client
     {
         return $this->getDOB()->format('m-d') === date('m-d');
     }
+
+    /**
+     * Checks if client has an active session.
+     *
+     * @return bool
+     */
+    public function hasActiveSession(): bool
+    {
+        $sessions = $this->getSessions()->filter(function (Session $session) {
+            return !$session->getFinishedAt();
+        });
+
+        return !$sessions->isEmpty();
+    }
 }

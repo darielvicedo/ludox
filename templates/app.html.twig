@@ -10,7 +10,8 @@
         newSessionUrl: path('session_api_new'),
         loadActiveSessionsUrl: path('session_api_get_active'),
         loadFinishedSessionsUrl: path('session_api_get_finished'),
-        sessionFinishUrl: path('session_api_finish')
+        sessionFinishUrl: path('session_api_finish'),
+        loadAvailablePlayersUrl: path('session_api_get_availableplayers')
     }) }}>
         <div class="row">
             <div class="col-12 col-md-3">
@@ -100,7 +101,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-5">
                 <h2 class="h5 border-bottom border-2 pb-2">Nueva sessi&oacute;n</h2>
 
                 <form
@@ -119,22 +120,9 @@
 
                     <div class="col-12 ps-4">
                         <h3 class="h6">Jugadores:</h3>
-                        {% for ticket in tickets %}
-                            <div class="form-check">
-                                <input
-                                        id="ticket{{ ticket.id }}"
-                                        name="sessionClient[{{ ticket.client.id }}]"
-                                        type="checkbox"
-                                        class="form-check-input"
-                                        value="{{ ticket.client.id }}"
-                                >
-                                <label for="ticket{{ ticket.id }}" class="form-check-label">
-                                    {{ ticket.client.name }}
-                                </label>
-                            </div>
-                        {% else %}
-                            <small class="form-text">no hay pases disponibles hoy</small>
-                        {% endfor %}
+                        <div {{ stimulus_target('main', 'availablePlayers') }}>
+                            {{ include('fragments/_spinner.html.twig') }}
+                        </div>
                     </div>
 
                     <div class="col-12 text-end">

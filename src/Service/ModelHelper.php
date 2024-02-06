@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Session;
 use App\Entity\Ticket;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ModelHelper
@@ -23,6 +25,19 @@ class ModelHelper
     public function fetchAvailableTickets()
     {
         return $this->em->getRepository(Ticket::class)->findValidToday();
+    }
+
+    /**
+     * Get available clients for a game session.
+     *
+     * @return Collection
+     */
+    public function getAvailableClientsToday(): Collection
+    {
+        $tickets = new ArrayCollection($this->fetchAvailableTickets());
+        return $tickets->filter(function (Ticket $ticket) {
+            return !$ticket->getClient()->hasActiveSession();
+        });
     }
 
     public function fetchTodayActiveSessions()

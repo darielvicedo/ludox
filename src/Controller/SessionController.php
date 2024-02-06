@@ -118,6 +118,16 @@ class SessionController extends AbstractController
         return new Response();
     }
 
+    #[Route('/api/get-available-players', name: 'session_api_get_availableplayers', methods: ['GET'])]
+    public function getAvailablePlayers(): Response
+    {
+        $tickets = $this->model->getAvailableClientsToday();
+
+        return $this->render('session/_checks_available_players.html.twig', [
+            'tickets' => $tickets,
+        ]);
+    }
+
     #[Route('/{id}', name: 'session_show', methods: ['GET'])]
     public function show(Session $session): Response
     {
