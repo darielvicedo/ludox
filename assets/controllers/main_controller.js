@@ -178,6 +178,12 @@ export default class extends Controller {
             });
     }
 
+    /**
+     * Submits a game session.
+     *
+     * @param event
+     * @returns {Promise<void>}
+     */
     async submitSession(event) {
         event.preventDefault();
 
@@ -197,6 +203,9 @@ export default class extends Controller {
             })
             .then(async () => {
                 form.reset();
+
+                await this.loadActiveSessions();
+                await this.loadFinishedSessions();
             })
             .catch((reason) => {
                 console.error(reason);
