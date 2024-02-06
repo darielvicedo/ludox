@@ -13,6 +13,7 @@
 ###> dev/local ###
 /.idea/
 *.local.sh
+.php-version
 ###< dev/local ###
 
 ###> symfony/webpack-encore-bundle ###
