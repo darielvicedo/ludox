@@ -177,12 +177,31 @@ class Account
         return $credit;
     }
 
-    public function getBalance(): float
+    public function getBalance(): int
     {
         $debit = 0;
         $credit = 0;
 
         foreach ($this->getEntries() as $entry) {
+            $debit += $entry->getDebit() ?: 0;
+            $credit += $entry->getCredit() ?: 0;
+        }
+
+        $balance = $this->getType() === AccountTypeEnum::ACCOUNT_DEBIT ? $debit - $credit : $credit - $debit;
+
+        return $balance;
+    }
+
+    public function getBalanceInPeriod(\DateTimeInterface $start, \DateTimeInterface $end): int
+    {
+        $debit = 0;
+        $credit = 0;
+
+        $entries = $this->getEntries()->filter(function (AccountEntry $entry) use ($start, $end) {
+            return $entry->getAnnotatedAt() >= $start && $entry->getAnnotatedAt() <= $end;
+        });
+
+        foreach ($entries as $entry) {
             $debit += $entry->getDebit() ?: 0;
             $credit += $entry->getCredit() ?: 0;
         }

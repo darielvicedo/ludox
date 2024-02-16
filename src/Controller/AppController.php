@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Service\DataHelper;
 use App\Service\ModelHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +16,17 @@ class AppController extends AbstractController
 
     private ModelHelper $model;
 
-    public function __construct(EntityManagerInterface $em, ModelHelper $model)
+    private DataHelper $data;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        ModelHelper            $model,
+        DataHelper             $data,
+    )
     {
         $this->em = $em;
         $this->model = $model;
+        $this->data = $data;
     }
 
     /**
@@ -40,5 +48,14 @@ class AppController extends AbstractController
     public function admin(): Response
     {
         return $this->render('admin.html.twig');
+    }
+
+    public function staticNavbarNetValue()
+    {
+        $income = $this->data->getMonthNetIncome();
+
+        return $this->render('fragments/_navbar_netvalue.html.twig', [
+            'value' => $income,
+        ]);
     }
 }
