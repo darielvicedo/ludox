@@ -4,14 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Location;
 use App\Form\LocationType;
-use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/location')]
+#[Route('/admin/location')]
 class LocationController extends AbstractController
 {
     private EntityManagerInterface $em;
