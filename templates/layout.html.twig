@@ -2,11 +2,11 @@
 
 {% block body %}
     <div class="vh-100 d-flex flex-column justify-content-start">
-        <header class="border-bottom border-2 mb-3 shadow-sm">
+        <header class="border-bottom border-2 mb-3 shadow-sm d-print-none">
             {{ include('fragments/_navbar.html.twig') }}
         </header>
 
-        <div class="container d-flex justify-content-center mb-4">
+        <div class="container d-flex justify-content-center mb-4 d-print-none">
             <ol class="breadcrumb shadow bg-white">
                 <li class="breadcrumb-item d-flex justify-content-start align-items-center">
                     <img src="{{ asset('build/img/logo.png') }}" class="me-2" width="25" alt="logo">
@@ -16,7 +16,7 @@
             </ol>
         </div>
 
-        <main class="flex-grow-1">
+        <main class="flex-grow-1 mb-5">
             <div class="container-fluid">
                 {% block content %}
                 {% endblock %}

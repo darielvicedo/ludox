@@ -7,24 +7,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row row-cols-1 row-cols-md-6 g-3">
+    <div class="row row-cols-1 row-cols-md-6 g-3 mb-4">
         <div class="col">
             <div class="card">
                 <div class="card-body text-center">
-                    <a href="{{ path('ticket_index') }}" class="card-link">
-                        <i class="bi-ticket fs-1"></i><br>
-                        PASES
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-body text-center">
-                    <a href="{{ path('coupon_index') }}" class="card-link">
-                        <i class="bi-ticket-perforated-fill fs-1"></i><br>
-                        CUPONES
+                    <a href="{{ path('app_client_index') }}" class="card-link">
+                        <i class="bi-people-fill fs-1"></i><br>
+                        CLIENTES
                     </a>
                 </div>
             </div>
@@ -44,9 +33,33 @@
         <div class="col">
             <div class="card">
                 <div class="card-body text-center">
-                    <a href="{{ path('app_client_index') }}" class="card-link">
-                        <i class="bi-people-fill fs-1"></i><br>
-                        CLIENTES
+                    <a href="{{ path('session_index') }}" class="card-link">
+                        <i class="bi-dice-6-fill fs-1"></i><br>
+                        SESIONES
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-6 g-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <a href="{{ path('ticket_index') }}" class="card-link">
+                        <i class="bi-ticket fs-1"></i><br>
+                        PASES
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <a href="{{ path('coupon_index') }}" class="card-link">
+                        <i class="bi-ticket-perforated-fill fs-1"></i><br>
+                        CUPONES
                     </a>
                 </div>
             </div>

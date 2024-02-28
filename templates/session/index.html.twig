@@ -1,37 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block title %}Session index{% endblock %}
+{% block title %}Sesiones{% endblock %}
 
-{% block body %}
-    <h1>Session index</h1>
+{% block bread %}
+    <li class="breadcrumb-item d-flex justify-content-start align-items-center">
+        <a href="{{ path('admin') }}" class="pr-md-3 pl-md-2 pr-2 pl-1">Administraci&oacute;n</a>
+    </li>
+    <li class="breadcrumb-item active">Sesiones</li>
+{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>CreatedAt</th>
-                <th>FinishedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for session in sessions %}
-            <tr>
-                <td>{{ session.id }}</td>
-                <td>{{ session.createdAt ? session.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ session.finishedAt ? session.finishedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_session_show', {'id': session.id}) }}">show</a>
-                    <a href="{{ path('app_session_edit', {'id': session.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_session_new') }}">Create new</a>
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">SESIONES</div>
+                <div class="card-body"></div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-striped m-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Juego</th>
+                            <th>D&iacute;a</th>
+                            <th class="text-center">Comienzo</th>
+                            <th class="text-center">Final</th>
+                            <th class="text-center">Duraci&oacute;n</th>
+                            <th class="text-center">Jugadores</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for session in sessions %}
+                            <tr>
+                                <th class="text-center">{{ session.id }}</th>
+                                <td>{{ session.game }}</td>
+                                <td>{{ session.createdAt|date('d/m/Y') }}</td>
+                                <td class="text-center">{{ session.createdAt|date('H:i') }}</td>
+                                <td class="text-center">
+                                    {{ session.finishedAt ? session.finishedAt|date('H:i') : 'Open' }}
+                                </td>
+                                <td class="text-center">{{ session.duration|date('%h:%I') }}</td>
+                                <td class="text-center">{{ session.clients|length }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

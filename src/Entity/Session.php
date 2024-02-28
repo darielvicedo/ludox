@@ -100,4 +100,19 @@ class Session
 
         return $this;
     }
+
+    public function getDuration(): \DateInterval
+    {
+        $start = $this->getCreatedAt();
+        $finish = $this->getFinishedAt() ?: new \DateTimeImmutable();
+
+        return $start->diff($finish);
+    }
+
+    public function getDurationInMinutes(): int
+    {
+        $duration = $this->getDuration();
+
+        return ($duration->h * 60) + $duration->i;
+    }
 }
