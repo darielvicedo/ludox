@@ -38,7 +38,7 @@
                                 <td class="text-center">
                                     {{ session.finishedAt ? session.finishedAt|date('H:i') : 'Open' }}
                                 </td>
-                                <td class="text-center">{{ session.duration|date('%h:%I') }}</td>
+                                <td class="text-center">{{ session.duration|date('%h\'%I"') }}</td>
                                 <td class="text-center">{{ session.clients|length }}</td>
                             </tr>
                         {% else %}
