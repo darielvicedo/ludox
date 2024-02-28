@@ -1,0 +1,94 @@
+<table class="table table-borderless" style="table-layout: fixed;">
+    <tbody>
+    <tr>
+        <td>INGRESOS</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for name, value in data.income.accounts %}
+        <tr>
+            <td></td>
+            <td class="text-end">{{ name }}</td>
+            <td class="text-end">{{ value|money|format_currency('USD') }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td class="text-end"><strong>Total</strong></td>
+        <td class="text-end"><strong>{{ data.income.total|money|format_currency('USD') }}</strong></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>- GASTOS</td>
+        <td class="text-end"></td>
+        <td class="text-start"></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for name, value in data.outcome.accounts %}
+        <tr>
+            <td></td>
+            <td class="text-end">{{ name }}</td>
+            <td class="text-end">{{ value|money|format_currency('USD') }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td></td>
+        <td class="text-end"><strong>Total</strong></td>
+        <td class="text-end"><strong>{{ data.outcome.total|money|format_currency('USD') }}</strong></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>BENEFICIOS</td>
+        <td class="text-end"></td>
+        <td class="text-start"></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="text-end">INGRESOS</td>
+        <td class="text-end">{{ data.income.total|money|format_currency('USD') }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="text-end">- GASTOS</td>
+        <td class="text-end">{{ data.outcome.total|money|format_currency('USD') }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="text-end"><strong>Total</strong></td>
+        <td class="text-end"><strong>{{ data.benefits|money|format_currency('USD') }}</strong></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>APORTES</td>
+        <td class="text-end"></td>
+        <td class="text-start"></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for name, value in data.tax %}
+        <tr>
+            <td></td>
+            <td class="text-end">{{ name }}</td>
+            <td class="text-end">{{ value|money|format_currency('USD') }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

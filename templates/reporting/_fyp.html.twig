@@ -1,0 +1,74 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item d-flex justify-content-start align-items-center">
+        <a href="{{ path('reporting_index') }}" class="pr-md-3 pl-md-2 pr-2 pl-1">Reportes</a>
+    </li>
+    <li class="breadcrumb-item active">Finanzas y Precios</li>
+{% endblock %}
+
+{% block content %}
+    <div
+            {{ stimulus_controller('reporting', {
+                loadReportUrl: path('reporting_api_fyp')
+            }) }}
+    >
+        <div class="row d-print-none">
+            <div class="col-12">
+                <form class="row g-1 align-items-center justify-content-center mb-4">
+                    <div class="col-1 text-end">
+                        <i
+                                class="bi-chevron-left fs-2 fw-bold pe-3"
+                                style="cursor: pointer;"
+                                {{ stimulus_action('reporting', 'subMonth', 'click') }}
+                        ></i>
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="visually-hidden" for="month">Mes</label>
+                        <input
+                                type="month"
+                                id="month"
+                                name="month"
+                                class="form-control"
+                                {{ stimulus_target('reporting', 'monthSelect') }}
+                        >
+                    </div>
+
+                    <div class="col-1 text-start">
+                        <i
+                                class="bi-chevron-right fs-2 fw-bold ps-3"
+                                style="cursor: pointer;"
+                                {{ stimulus_action('reporting', 'addMonth', 'click') }}
+                        ></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8">
+                <div
+                        class="bg-white py-2 px-4 shadow w-100 font-monospace"
+                >
+                    <p class="text-center mb-5">
+                        <strong>EL POLIEDRO</strong><br>
+                        Ludoteca Matanzas
+                    </p>
+
+                    <p class="mb-5">
+                        REPORTE: FINANZAS Y PRECIOS
+                    </p>
+
+                    <hr class="mb-5">
+
+                    <div {{ stimulus_target('reporting', 'view') }}>
+                        {{ include('fragments/_spinner.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block bread %}
+    <li class="breadcrumb-item active">Reportes</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-6 g-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <a href="{{ path('reporting_fyp') }}" class="card-link">
+                        <i class="bi-cash-coin fs-1"></i><br>
+                        FINANZAS Y PRECIOS
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
