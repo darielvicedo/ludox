@@ -8,12 +8,14 @@ enum AssetCategoryTypeEnum
     public const CATEGORY_ACCESSORY = 1;
     public const CATEGORY_TOOLS = 2;
     public const CATEGORY_FURNITURE = 3;
+    public const CATEGORY_EXPANSION = 4;
 
     private const TYPE_NAMES = [
         self::CATEGORY_GAMES => "Juegos",
         self::CATEGORY_ACCESSORY => "Accesorios",
         self::CATEGORY_TOOLS => "Útiles y herramientas",
         self::CATEGORY_FURNITURE => "Mobiliario",
+        self::CATEGORY_EXPANSION => "Expansión",
     ];
 
     /**
