@@ -10,6 +10,7 @@
         "core-js": "^3.23.0",
         "dropzone": "^6.0.0-beta.2",
         "file-loader": "^6.2.0",
+        "luxon": "^3.4.4",
         "regenerator-runtime": "^0.13.9",
         "sass": "^1.67.0",
         "sass-loader": "^13.3.2",
