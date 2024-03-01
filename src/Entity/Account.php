@@ -14,6 +14,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(fields: 'code', message: 'La cuenta con código {{ value }} ya existe.')]
 class Account
 {
+    public const ACCOUNT_SALES = "50.2.900";
+    public const ACCOUNT_CASH = "10.1.101";
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

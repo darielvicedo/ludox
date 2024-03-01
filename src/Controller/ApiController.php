@@ -7,6 +7,7 @@ use App\Entity\AccountEntry;
 use App\Entity\Client;
 use App\Entity\Coupon;
 use App\Entity\Ticket;
+use App\Service\AccountHelper;
 use App\Service\LudoxHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,10 +22,17 @@ class ApiController extends AbstractController
 
     private LudoxHelper $ludox;
 
-    public function __construct(EntityManagerInterface $em, LudoxHelper $ludox)
+    private AccountHelper $accountant;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        LudoxHelper            $ludox,
+        AccountHelper          $accountant,
+    )
     {
         $this->em = $em;
         $this->ludox = $ludox;
+        $this->accountant = $accountant;
     }
 
     #[Route('/ticket/new', name: 'api_ticket_new', methods: ['POST'])]
@@ -69,20 +77,17 @@ class ApiController extends AbstractController
         $ticket->setPrice($price);
         $this->em->persist($ticket);
 
-        // account operation
-        if ($ticket->getPrice() > 0) {
-            $salesAccountCode = $_ENV['SALES_ACCOUNT'];
-            $account = $this->em->getRepository(Account::class)->findOneBy(['code' => $salesAccountCode]);
-            $accountEntry = new AccountEntry();
-            $accountEntry
-                ->setConcept('Venta de pase diario')
-                ->setCredit($ticket->getPrice())
-                ->setAccount($account);
-            $this->em->persist($accountEntry);
-        }
-
         // persist to db
         $this->em->flush();
+
+        // account operation
+        if ($ticket->getPrice() > 0) {
+            // register sale
+            $this->accountant->registerSale($ticket->getPrice());
+
+            // register cash
+            $this->accountant->increaseCash($ticket->getPrice());
+        }
 
         return new Response();
     }
