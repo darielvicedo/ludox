@@ -78,10 +78,16 @@ class DataHelper
         }
 
         // benefits
-        $model['benefits'] = $model['income']['total'] - $model['outcome']['total'];
+        $totalIncome = $model['income']['total'];
+        $totalOutcome = $model['outcome']['total'];
+        $difference = $totalIncome - $totalOutcome;
+        $investment = $difference / 2;
+        $benefits = $difference - $investment;
+        $model['investment'] = $investment;
+        $model['benefits'] = $benefits;
 
         // taxes
-        $cam = (10 * $model['benefits']) / 100;
+        $cam = (10 * $benefits) / 100;
         $model['tax']['CAM (10%)'] = $cam;
 
         return $model;
